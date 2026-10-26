@@ -9,7 +9,7 @@
 엔트리 블록으로 만든 텍스트 브라우저입니다. 엔트리 작품은 인터넷에 닿을 수 없어서, 내 컴퓨터에서 도는 **중계 앱**이 화면과 클립보드로 실제 웹을 이어 줍니다.
 
 중계 앱 받기 · 사용법 · 소스:
-https://smilepark2013.github.io/entry-browser/
+https://smilepark2013-lang.github.io/entry-browser/
 
 쓰는 법
 1. 중계 앱을 켜고, 이 작품이 열린 브라우저 창을 고른 뒤 [캡처 시작]

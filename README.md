@@ -2,8 +2,8 @@
 
 > ⚠️ **실험용 프로젝트입니다.** 아래 [먼저 읽어 주세요](#️-먼저-읽어-주세요)를 꼭 읽고 사용하세요.
 
-**소개 · 다운로드: <https://smilepark2013.github.io/entry-browser/>** ·
-[Releases](https://github.com/smilepark2013/entry-browser/releases) · MIT License
+**소개 · 다운로드: <https://smilepark2013-lang.github.io/entry-browser/>** ·
+[Releases](https://github.com/smilepark2013-lang/entry-browser/releases) · MIT License
 
 엔트리(playentry.org) 블록으로 만든 **텍스트 브라우저**와, 그것을 진짜 인터넷과 이어 주는
 **중계 앱**입니다. 이 저장소에 둘 다 들어 있습니다.
@@ -88,7 +88,7 @@ Entry Browser  ◀──(사용자가 Ctrl+V 로 붙여넣음)──────
 ## 설치
 
 ### 빌드본 받기
-[Releases](https://github.com/smilepark2013/entry-browser/releases/latest) 에서 받습니다 (Windows 10/11, 64비트).
+[Releases](https://github.com/smilepark2013-lang/entry-browser/releases/latest) 에서 받습니다 (Windows 10/11, 64비트).
 
 | 파일 | |
 |---|---|
@@ -114,7 +114,7 @@ Entry Browser  ◀──(사용자가 Ctrl+V 로 붙여넣음)──────
 **준비물**: [Node.js](https://nodejs.org/) 22 이상 (LTS 권장), [Git](https://git-scm.com/)
 
 ```powershell
-git clone https://github.com/smilepark2013/entry-browser.git
+git clone https://github.com/smilepark2013-lang/entry-browser.git
 cd entry-browser
 npm install
 ```
@@ -263,7 +263,7 @@ scripts/
   release-files.mjs        릴리스 파일을 dist/ 에 모으고 SHA256SUMS.txt 를 쓴다
   docs-grids.mjs           소개 페이지 미니 브라우저의 진짜 요청 격자 → docs/grids.js
 assets/icon.svg, icon.png  앱 아이콘
-docs/                      소개 페이지 (GitHub Pages — https://smilepark2013.github.io/entry-browser/)
+docs/                      소개 페이지 (GitHub Pages — https://smilepark2013-lang.github.io/entry-browser/)
   index.html · effects.js  페이지 · 움직임 (미니 브라우저 시연, 흐름도, 복사 단추, 테마 전환)
   grids.js                 미니 브라우저의 요청 격자 (만든 파일 — 실제 코덱이라 중계 앱이 읽는다)
 .github/workflows/release.yml   태그(v*)를 올리면 빌드·검사·릴리스

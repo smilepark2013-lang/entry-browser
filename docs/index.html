@@ -8,7 +8,7 @@
 <link rel="icon" href="img/icon.png">
 <meta property="og:title" content="Entry Browser — 엔트리 안에서 진짜 웹을 읽는 브라우저">
 <meta property="og:description" content="엔트리 블록으로 만든 텍스트 브라우저와, 화면·클립보드로 실제 인터넷에 이어 주는 실험용 중계 앱">
-<meta property="og:image" content="https://smilepark2013.github.io/entry-browser/img/wiki.png">
+<meta property="og:image" content="https://smilepark2013-lang.github.io/entry-browser/img/wiki.png">
 <script>
 // 고른 테마를 그리기 전에 먼저 적용한다 (다른 테마가 잠깐 비치지 않게). 고른 적 없으면 시스템 설정을 따른다
 try { const t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
@@ -225,7 +225,7 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
       <a href="#how">작동 방식</a>
       <a href="#download">다운로드</a>
       <a href="#build">직접 빌드</a>
-      <a class="gh" href="https://github.com/smilepark2013/entry-browser">GitHub</a>
+      <a class="gh" href="https://github.com/smilepark2013-lang/entry-browser">GitHub</a>
       <button class="theme" id="theme" type="button" aria-label="어두운 테마로 바꾸기" title="어두운 테마로 바꾸기"></button>
     </nav>
   </div>
@@ -241,7 +241,7 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
       <div class="cta">
         <a class="btn primary" href="#download">중계 앱 받기</a>
         <a class="btn" href="#entry">엔트리 작품 열기</a>
-        <a class="btn" href="https://github.com/smilepark2013/entry-browser">소스 보기</a>
+        <a class="btn" href="https://github.com/smilepark2013-lang/entry-browser">소스 보기</a>
       </div>
     </div>
     <figure style="margin:0">
@@ -347,16 +347,16 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
   <section id="download">
     <h2>다운로드</h2>
     <p class="sub">Windows 10/11 (64비트). 빌드본은 GitHub Actions 가 공개된 로그로 만들어 릴리스에 올립니다.</p>
-    <a class="btn primary" href="https://github.com/smilepark2013/entry-browser/releases/latest/download/EntryBrowserRelay-Setup.exe">중계 앱 설치판 받기</a>
+    <a class="btn primary" href="https://github.com/smilepark2013-lang/entry-browser/releases/latest/download/EntryBrowserRelay-Setup.exe">중계 앱 설치판 받기</a>
     <ul class="files">
-      <li><a href="https://github.com/smilepark2013/entry-browser/releases/latest/download/EntryBrowserRelay-Portable.exe">Portable 판</a>: 설치 없이 바로 실행합니다. 가상 머신이나 Windows Sandbox 에 알맞습니다.</li>
-      <li><a href="https://github.com/smilepark2013/entry-browser/releases/latest/download/entry-browser.ent">엔트리 작품 파일</a> (<code>entry-browser.ent</code>): 엔트리에서 [작품 불러오기]로 엽니다.</li>
-      <li><a href="https://github.com/smilepark2013/entry-browser/releases/latest/download/SHA256SUMS.txt">SHA256SUMS.txt</a>: 받은 파일이 올린 파일과 같은지 확인합니다.</li>
+      <li><a href="https://github.com/smilepark2013-lang/entry-browser/releases/latest/download/EntryBrowserRelay-Portable.exe">Portable 판</a>: 설치 없이 바로 실행합니다. 가상 머신이나 Windows Sandbox 에 알맞습니다.</li>
+      <li><a href="https://github.com/smilepark2013-lang/entry-browser/releases/latest/download/entry-browser.ent">엔트리 작품 파일</a> (<code>entry-browser.ent</code>): 엔트리에서 [작품 불러오기]로 엽니다.</li>
+      <li><a href="https://github.com/smilepark2013-lang/entry-browser/releases/latest/download/SHA256SUMS.txt">SHA256SUMS.txt</a>: 받은 파일이 올린 파일과 같은지 확인합니다.</li>
     </ul>
     <p class="note">코드 서명을 하지 않아 Windows SmartScreen 경고가 뜹니다 (<code>추가 정보</code> → <code>실행</code>).
       걱정된다면 아래처럼 <a href="#build">직접 빌드</a>하는 것을 권합니다. 받은 파일 확인:</p>
     <pre><code>Get-FileHash .\EntryBrowserRelay-Portable.exe -Algorithm SHA256</code></pre>
-    <p class="note">모든 버전은 <a href="https://github.com/smilepark2013/entry-browser/releases">Releases</a> 에 있습니다.</p>
+    <p class="note">모든 버전은 <a href="https://github.com/smilepark2013-lang/entry-browser/releases">Releases</a> 에 있습니다.</p>
   </section>
 
   <section id="entry">
@@ -390,7 +390,7 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
     <details>
       <summary>글자가 넘치거나 링크를 누르는 자리가 어긋나요</summary>
       <p>작품 주소창에 <code>ruler.html</code> 을 쳐서 글자 폭 확인 페이지를 보고, 화면을 찍어
-        <a href="https://github.com/smilepark2013/entry-browser/issues">이슈</a>로 알려 주세요. (Windows 의 맑은 고딕 기준으로 맞춰져 있습니다)</p>
+        <a href="https://github.com/smilepark2013-lang/entry-browser/issues">이슈</a>로 알려 주세요. (Windows 의 맑은 고딕 기준으로 맞춰져 있습니다)</p>
     </details>
     <details>
       <summary>렌더 모드는 안전한가요?</summary>
@@ -404,7 +404,7 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
     <h2>직접 빌드하기</h2>
     <p class="sub">빌드본을 믿기 어렵다면 소스를 직접 읽고 빌드하세요. 실행 의존성은 <code>electron</code>, <code>jsdom</code>, <code>@mozilla/readability</code> 셋뿐입니다.</p>
     <p>요구사항: <a href="https://nodejs.org/">Node.js</a> 22 이상, <a href="https://git-scm.com/">Git</a></p>
-    <pre><code>git clone https://github.com/smilepark2013/entry-browser.git
+    <pre><code>git clone https://github.com/smilepark2013-lang/entry-browser.git
 cd entry-browser
 npm install
 
@@ -412,9 +412,9 @@ npm start          # 빌드 없이 바로 실행
 npm run dist       # dist/ 에 설치판과 portable 판
 npm run build:entry  # entry/build/entry-browser.ent (엔트리 작품)</code></pre>
     <p>보안이 걱정된다면 이 파일들부터 읽어 보세요:
-      <a href="https://github.com/smilepark2013/entry-browser/blob/main/src/main.mjs"><code>src/main.mjs</code></a> (캡처 권한·요청 처리·클립보드),
-      <a href="https://github.com/smilepark2013/entry-browser/blob/main/src/lib/guard.mjs"><code>src/lib/guard.mjs</code></a> (주소 검사·내부망 차단),
-      <a href="https://github.com/smilepark2013/entry-browser/blob/main/src/renderer/capture-worker.mjs"><code>src/renderer/capture-worker.mjs</code></a> (격자 읽기).</p>
+      <a href="https://github.com/smilepark2013-lang/entry-browser/blob/main/src/main.mjs"><code>src/main.mjs</code></a> (캡처 권한·요청 처리·클립보드),
+      <a href="https://github.com/smilepark2013-lang/entry-browser/blob/main/src/lib/guard.mjs"><code>src/lib/guard.mjs</code></a> (주소 검사·내부망 차단),
+      <a href="https://github.com/smilepark2013-lang/entry-browser/blob/main/src/renderer/capture-worker.mjs"><code>src/renderer/capture-worker.mjs</code></a> (격자 읽기).</p>
   </section>
 
 </main>
@@ -457,7 +457,7 @@ const b = document.getElementById('entry-btn');
 if (b.dataset.url) { b.href = b.dataset.url; }
 else {
   b.textContent = '작품 파일 받기';
-  b.href = 'https://github.com/smilepark2013/entry-browser/releases/latest/download/entry-browser.ent';
+  b.href = 'https://github.com/smilepark2013-lang/entry-browser/releases/latest/download/entry-browser.ent';
   document.getElementById('entry-desc').textContent = '엔트리 작품 페이지는 준비 중입니다. 작품 파일(.ent)을 받아 엔트리에서 [작품 불러오기]로 여세요.';
 }
 </script>

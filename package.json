@@ -4,10 +4,10 @@
   "description": "엔트리 작품(Entry Browser)과 실제 인터넷을 화면·클립보드로 잇는 실험용 중계 앱",
   "author": "smilepark2013",
   "license": "MIT",
-  "homepage": "https://smilepark2013.github.io/entry-browser/",
+  "homepage": "https://smilepark2013-lang.github.io/entry-browser/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/smilepark2013/entry-browser.git"
+    "url": "https://github.com/smilepark2013-lang/entry-browser.git"
   },
   "private": true,
   "type": "module",
@@ -30,7 +30,7 @@
     "electron-builder": "^26.18.0"
   },
   "build": {
-    "appId": "io.github.smilepark2013.entry-browser-relay",
+    "appId": "io.github.smilepark2013-lang.entry-browser-relay",
     "productName": "Entry Browser Relay",
     "copyright": "Copyright © 2026 smilepark2013 (MIT)",
     "icon": "assets/icon.png",

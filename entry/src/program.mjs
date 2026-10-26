@@ -112,7 +112,7 @@ const cover = [
     coverText('cover_sub2', '진짜 웹을 읽는 텍스트 브라우저', { x: 58, y: 135, size: 12, color: '#cbd5e1' }),
     coverText('cover_feat', '링크 · 양식 · 펼치기 · 한자 · 렌더 모드', { x: 58, y: 163, size: 9, color: '#94a3b8' }),
     coverText('cover_cta', '시작하기', { x: COVER.cta.x + COVER.cta.w / 2 + 8, y: COVER.cta.y + COVER.cta.h / 2, size: 12, color: '#052e16', align: 0 }),
-    coverText('cover_foot', '중계 앱이 필요합니다  ·  smilepark2013.github.io/entry-browser', { x: 58, y: 252, size: 8, color: '#64748b' }),
+    coverText('cover_foot', '중계 앱이 필요합니다  ·  smilepark2013-lang.github.io/entry-browser', { x: 58, y: 252, size: 8, color: '#64748b' }),
     icon('cover', COVER_PIC, 0, 0),
 ];
 

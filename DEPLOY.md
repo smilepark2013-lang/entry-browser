@@ -20,17 +20,17 @@ npm run release        # 엔트리 작품 빌드 → 시뮬레이터 검사 → 
 git init -b main
 git add .
 git commit -m "Entry Browser Relay 0.1.0"
-gh repo create smilepark2013/entry-browser --public --source . --remote origin --push
+gh repo create smilepark2013-lang/entry-browser --public --source . --remote origin --push
 ```
 
 아니면 직접:
-1. GitHub 에서 **public** 저장소 `smilepark2013/entry-browser` 를 만듭니다 (README·라이선스는 만들지 않음 — 이미 있습니다).
+1. GitHub 에서 **public** 저장소 `smilepark2013-lang/entry-browser` 를 만듭니다 (README·라이선스는 만들지 않음 — 이미 있습니다).
 2. 이 폴더에서:
    ```powershell
    git init -b main
    git add .
    git commit -m "Entry Browser Relay 0.1.0"
-   git remote add origin https://github.com/smilepark2013/entry-browser.git
+   git remote add origin https://github.com/smilepark2013-lang/entry-browser.git
    git push -u origin main
    ```
    `.gitignore` 가 `node_modules/` · `dist/` · `entry/build/` · `.claude/` 를 뺍니다.
@@ -41,9 +41,9 @@ gh repo create smilepark2013/entry-browser --public --source . --remote origin -
 GitHub 저장소 → **Settings → Pages** → Source: `Deploy from a branch`, Branch: `main` / 폴더 `/docs` → Save.
 `gh` 로는:
 ```powershell
-gh api -X POST repos/smilepark2013/entry-browser/pages -f "source[branch]=main" -f "source[path]=/docs"
+gh api -X POST repos/smilepark2013-lang/entry-browser/pages -f "source[branch]=main" -f "source[path]=/docs"
 ```
-몇 분 뒤 <https://smilepark2013.github.io/entry-browser/> 에 뜹니다.
+몇 분 뒤 <https://smilepark2013-lang.github.io/entry-browser/> 에 뜹니다.
 
 ## 3. 릴리스 (버전마다)
 
