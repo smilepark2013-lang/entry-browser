@@ -1,0 +1,8 @@
+node_modules/
+dist/
+out/
+*.log
+# 빌드 산출물 — 엔트리 작품(.ent)은 `npm run build:entry` 로 만들고, 릴리스에는 GitHub Actions 가 붙인다
+entry/build/
+# 이 PC 의 Claude Code 설정
+.claude/

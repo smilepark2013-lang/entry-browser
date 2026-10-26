@@ -1,0 +1,4 @@
+# 줄바꿈은 저장소 안에서 LF 로 통일한다 (Windows 에서 고쳐도 diff 가 줄바꿈으로 더러워지지 않게)
+* text=auto eol=lf
+*.png binary
+*.ent binary

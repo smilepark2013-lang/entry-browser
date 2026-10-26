@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head><meta charset="utf-8"><title>블록 코딩 입문 - 예시 문서</title>
+<style>body { font-family: sans-serif }</style>
+<script>console.log('보이면 안 된다')</script>
+</head>
+<body>
+<nav><a href="/">홈</a> <a href="/docs">문서</a> <a href="/about">소개</a></nav>
+<main>
+<h1>블록 코딩 입문</h1>
+<p class="meta">2026년 10월 · 읽는 데 3분</p>
+<p>블록 코딩은 글자로 명령을 적는 대신 <b>블록을 끼워 맞춰</b> 프로그램을 만드는 방법이다.
+<a href="https://example.com/history">처음 나온 것</a>은 오래전이지만, 지금은 학교 수업에서 널리 쓰인다.
+이 문서는 Entry Browser 의 <i>미리보기와 테스트</i>를 위해 직접 쓴 예시다.</p>
+
+<h2>무엇을 배우나</h2>
+<ul>
+  <li>순서대로 실행하기</li>
+  <li>반복하기 — <a href="https://example.com/loop">반복 블록 자세히</a></li>
+  <li>조건에 따라 나누기
+    <ul><li>만약 ~라면</li><li>아니면</li></ul>
+  </li>
+</ul>
+<ol start="1"><li>블록을 고른다</li><li>끼운다</li><li>실행한다</li></ol>
+
+<h3>블록과 글 코드 비교</h3>
+<table class="wikitable">
+  <tr><th>블록</th><th>파이썬</th><th>설명</th></tr>
+  <tr><td>10번 반복하기</td><td>for i in range(10):</td><td>정해진 횟수</td></tr>
+  <tr><td>계속 반복하기</td><td>while True:</td><td>멈출 때까지</td></tr>
+  <tr><td>만약 ~라면</td><td>if x &gt; 3:</td><td>조건</td></tr>
+</table>
+
+<blockquote>컴퓨터는 시키는 대로 할 뿐이다. 무엇을 시킬지가 프로그래밍이다.</blockquote>
+
+<pre><code>def greet(name):
+    print("안녕, " + name)
+
+greet("엔트리")</code></pre>
+
+<figure><img src="x.png" alt="블록을 끼우는 모습"><figcaption>그림 1. 블록을 끼우는 모습</figcaption></figure>
+<h3>검색해 보기</h3>
+<form action="/search" method="get">
+  <input type="search" name="q" placeholder="검색어를 입력하세요">
+  <input type="hidden" name="src" value="sample">
+  <label><input type="checkbox" name="exact" value="1"> 정확히 일치</label>
+  <label><input type="radio" name="sort" value="new" checked> 최신순</label>
+  <label><input type="radio" name="sort" value="old"> 오래된순</label>
+  <select name="lang"><option value="ko" selected>한국어</option><option value="en">English</option><option value="ja">日本語</option></select>
+  <label for="size">글자 크기</label> <input id="size" type="range" name="size" min="8" max="24" step="2" value="12">
+  <button type="submit">검색</button>
+</form>
+<form action="/login" method="post"><input type="text" name="id" placeholder="아이디"><input type="password" name="pw"><input type="submit" value="로그인"></form>
+<hr>
+<p>더 알아보기: <a href="https://example.com/a">첫째 글</a> · <a href="https://example.com/b">둘째 글</a> · <a href="#top">맨 위로</a></p>
+</main>
+<footer>예시 문서 · 내용은 테스트를 위해 지어낸 것이다</footer>
+</body>
+</html>

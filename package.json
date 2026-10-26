@@ -1,0 +1,61 @@
+{
+  "name": "entry-browser-relay",
+  "version": "0.1.0",
+  "description": "엔트리 작품(Entry Browser)과 실제 인터넷을 화면·클립보드로 잇는 실험용 중계 앱",
+  "author": "smilepark2013",
+  "license": "MIT",
+  "homepage": "https://smilepark2013.github.io/entry-browser/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smilepark2013/entry-browser.git"
+  },
+  "private": true,
+  "type": "module",
+  "main": "src/main.mjs",
+  "scripts": {
+    "start": "electron .",
+    "build:entry": "node --stack-size=8000 entry/tools/build.mjs",
+    "test:entry": "node --stack-size=8000 entry/tools/test_web.mjs",
+    "sync-codec": "node scripts/sync-codec.mjs",
+    "dist": "electron-builder --win nsis portable --publish never",
+    "dist:dir": "electron-builder --win --dir --publish never",
+    "release": "npm run build:entry && npm run test:entry && npm run dist && node scripts/release-files.mjs"
+  },
+  "dependencies": {
+    "@mozilla/readability": "^0.6.0",
+    "jsdom": "^30.1.3"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.18.0"
+  },
+  "build": {
+    "appId": "io.github.smilepark2013.entry-browser-relay",
+    "productName": "Entry Browser Relay",
+    "copyright": "Copyright © 2026 smilepark2013 (MIT)",
+    "icon": "assets/icon.png",
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "assets"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "EntryBrowserRelay-Setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "EntryBrowserRelay-Portable.${ext}"
+    }
+  }
+}

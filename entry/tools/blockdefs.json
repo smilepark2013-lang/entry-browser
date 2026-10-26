@@ -1,0 +1,945 @@
+{
+"_comment": "Entry.block[type] 에서 뽑은 블록 파라미터 스키마. 코드젠의 기준표다. playentry.org 에디터 콘솔에서 추출(2026-07-28).  일부 항목은 _guess 표시가 있다 — 에디터에서 뽑은 것이 아니라 추측한 정의이며, 실기에서 확인이 필요하다.  2026-08-03: 마우스·복제·AI 블록을 entryjs 소스에서 뽑아 추가했고, **같은 날 실기로 확인했다**(_verified).",
+"_paramTypes": {
+"Block": "자식 블록이 들어가는 자리. 리터럴이면 {type:'number'|'text', params:[값]}",
+"DropdownDynamic": "변수/리스트/신호의 id 문자열",
+"Dropdown": "고정 enum 문자열 (예: PLUS, EQUAL, AND, START)",
+"TextInput": "원시 값 (number/text 블록의 내용, 함수 이름 등)",
+"Text": "블록에 그려지는 장식 라벨. 항상 null",
+"Indicator": "항상 null",
+"LineBreak": "항상 null",
+"Keyboard": "키 코드 문자열 (예: '81' = Q)",
+"Output": "함수 매개변수 체인의 다음 고리"
+},
+"blocks": {
+"when_run_button_click": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_start():"
+},
+"when_message_cast": {
+"p": [
+"Indicator",
+"DropdownDynamic"
+],
+"s": 0,
+"py": "def when_get_signal(%2):"
+},
+"when_some_key_pressed": {
+"p": [
+"Indicator",
+"Keyboard"
+],
+"s": 0,
+"py": "def when_press_key(%2):"
+},
+"repeat_basic": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 1,
+"py": "for i in range(%1):"
+},
+"repeat_inf": {
+"p": [
+"Indicator",
+"Block"
+],
+"s": 1,
+"py": "while True:"
+},
+"repeat_while_true": {
+"p": [
+"Block",
+"Dropdown",
+"Indicator"
+],
+"s": 1,
+"py": "while %1 %2:"
+},
+"stop_repeat": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "break"
+},
+"continue_repeat": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "continue"
+},
+"_if": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 1,
+"py": "if %1:"
+},
+"if_else": {
+"p": [
+"Block",
+"Indicator",
+"LineBreak"
+],
+"s": 2,
+"py": "if %1: else:"
+},
+"wait_until_true": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.wait_until(%1)"
+},
+"wait_second": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.wait_for_sec(%1)"
+},
+"stop_object": {
+"p": [
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.stop_code(%1)"
+},
+"set_variable": {
+"p": [
+"DropdownDynamic",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "%1 = %2"
+},
+"change_variable": {
+"p": [
+"DropdownDynamic",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "%1 += %2"
+},
+"get_variable": {
+"p": [
+"DropdownDynamic",
+"Text"
+],
+"s": 0,
+"py": "%1"
+},
+"show_variable": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.show_variable(%1)"
+},
+"hide_variable": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.hide_variable(%1)"
+},
+"add_value_to_list": {
+"p": [
+"Block",
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "%2.append(%1)"
+},
+"remove_value_from_list": {
+"p": [
+"Block",
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "%2.pop(%1)"
+},
+"insert_value_to_list": {
+"p": [
+"Block",
+"DropdownDynamic",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "%2.insert(%3, %1)"
+},
+"change_value_list_index": {
+"p": [
+"DropdownDynamic",
+"Block",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "%1[%2] = %3"
+},
+"value_of_index_from_list": {
+"p": [
+"Text",
+"DropdownDynamic",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%2[%4]"
+},
+"length_of_list": {
+"p": [
+"Text",
+"DropdownDynamic",
+"Text"
+],
+"s": 0,
+"py": "len(%2)"
+},
+"is_included_in_list": {
+"p": [
+"Text",
+"DropdownDynamic",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%4 in %2"
+},
+"show_list": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.show_list(%1)"
+},
+"hide_list": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.hide_list(%1)"
+},
+"ask_and_wait": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.input(%1)"
+},
+"get_canvas_input_value": {
+"p": [
+"Text"
+],
+"s": 0,
+"py": "Entry.answer()"
+},
+"calc_basic": {
+"p": [
+"Block",
+"Dropdown",
+"Block"
+],
+"s": 0,
+"py": "(%1 %2 %3)",
+"_dropdown": [
+"PLUS",
+"MINUS",
+"MULTI",
+"DIVIDE"
+]
+},
+"quotient_and_mod": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text",
+"Dropdown"
+],
+"s": 0,
+"py": "(%2 %6 %4)",
+"_dropdown": [
+"QUOTIENT",
+"MOD"
+]
+},
+"combine_something": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "(%2 + %4)"
+},
+"char_at": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%2[%4]"
+},
+"substring": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%2[%4:%6]"
+},
+"index_of_string": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%2.find(%4)"
+},
+"replace_string": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "%2.replace(%4, %6)"
+},
+"length_of_string": {
+"p": [
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "len(%2)"
+},
+"get_project_timer_value": {
+"p": [
+"Text"
+],
+"s": 0,
+"py": "Entry.value_of_timer()"
+},
+"choose_project_timer_action": {
+"p": [
+"Text",
+"Dropdown",
+"Text",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.timer(%2)",
+"_dropdown": [
+"START",
+"STOP",
+"RESET"
+]
+},
+"boolean_basic_operator": {
+"p": [
+"Block",
+"Dropdown",
+"Block"
+],
+"s": 0,
+"py": "(%1 %2 %3)",
+"_dropdown": [
+"EQUAL",
+"GREATER",
+"LESS",
+"GREATER_OR_EQUAL",
+"LESS_OR_EQUAL",
+"NOT_EQUAL"
+]
+},
+"boolean_and_or": {
+"p": [
+"Block",
+"Dropdown",
+"Block"
+],
+"s": 0,
+"py": "(%1 %2 %3)",
+"_dropdown": [
+"AND",
+"OR"
+]
+},
+"boolean_not": {
+"p": [
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "not (%2)"
+},
+"dialog": {
+"p": [
+"Block",
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.print(%1)"
+},
+"show": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.show()"
+},
+"hide": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.hide()"
+},
+"text_write": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.write_text(%1)"
+},
+"text_append": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.append_text(%1)"
+},
+"text_prepend": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.prepend_text(%1)"
+},
+"text_flush": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.clear_text()"
+},
+"text_change_effect": {
+"p": [
+"Dropdown",
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.text_change_effect(%1, %2)",
+"_source": "entryjs develop src/playground/blocks/block_text.js (2026-08-03). paramsKeyMap {EFFECT:0, MODE:1}. EFFECT enum = 'strike' | 'underLine' | 'fontItalic' | 'fontBold', MODE enum = 'on' | 'off'. func 는 sprite.setTextEffect(effect, mode) 를 부른다.",
+"_note": "둘 다 **필드**다 (Dropdown). 식을 꽂을 수 없으므로 쓰는 쪽이 갈래로 펴야 한다. 실기 확인 전."
+},
+"text_change_font": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.text_change_font(%1)",
+"_source": "entryjs develop src/playground/blocks/block_text.js (2026-08-03). paramsKeyMap {FONT:0}, menuName 'fonts'. func 는 sprite.setFontWithLog(`${sprite.getFontSize()} ${font}`, false) 를 부른다 — 크기는 유지되고 글꼴 이름만 바뀐다.",
+"_note": "값은 변수 id 가 아니라 **CSS font-family 문자열**이다 (예: '나눔고딕'). 필드라 식을 못 꽂으므로 갈래로 편다. 폰트 목록은 호스트(playentry)가 주입하는 것이라 entryjs 소스에 없다 — 없는 이름을 주면 브라우저 기본 글꼴로 떨어질 뿐이라 안전한 실패다. 실기 확인 전."
+},
+"text_change_font_color": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.text_change_font_color(%1)"
+},
+"text_change_bg_color": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.text_change_bg_color(%1)"
+},
+"text_color": {
+"p": [
+"Color"
+],
+"s": 0,
+"_note": "hex 문자열. 예 '#00ff00'"
+},
+"color": {
+"p": [
+"Color"
+],
+"s": 0,
+"_note": "붓 색. hex 문자열"
+},
+"set_color": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"_note": "params[0] = color 블록"
+},
+"set_fill_color": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0
+},
+"start_drawing": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.start_drawing()"
+},
+"stop_drawing": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.stop_drawing()"
+},
+"set_thickness": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.set_brush_size(%1)"
+},
+"brush_erase_all": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.clear_drawing()"
+},
+"locate_xy": {
+"p": [
+"Block",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.set_xy(%1, %2)"
+},
+"set_scale_size": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.set_size(%1)"
+},
+"change_to_some_shape": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.change_shape(%1)",
+"_source": "entryjs develop src/playground/blocks/block_looks.js (2026-08-03). func 는 script.getStringValue('VALUE') 로 **평가**한 뒤 sprite.parent.getPicture(값) 을 찾아 setImage 한다. 값 슬롯이라 식을 꽂을 수 있고, getPicture 는 id -> 이름 -> 순번 순으로 찾는다 (소리의 getSound 와 같은 규칙).",
+"_note": "실기 확인 전. 안 먹으면 그림이 안 바뀔 뿐 나머지는 그대로 돈다."
+},
+"function_create": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 1,
+"_note": "params[0]=function_field_label 체인"
+},
+"function_create_value": {
+"p": [
+"Block",
+"Indicator",
+"LineBreak",
+"Block"
+],
+"s": 1,
+"_note": "params[3]=반환값 슬롯"
+},
+"function_field_label": {
+"p": [
+"TextInput",
+"Output"
+],
+"s": 0,
+"_note": "params[0]=함수 이름, params[1]=다음 매개변수 고리"
+},
+"function_field_string": {
+"p": [
+"Block",
+"Output"
+],
+"s": 0
+},
+"function_param_string": {
+"p": [],
+"s": 0
+},
+"set_func_variable": {
+"p": [
+"DropdownDynamic",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "%1 = %2"
+},
+"get_func_variable": {
+"p": [
+"DropdownDynamic",
+"Text"
+],
+"s": 0
+},
+"number": {
+"p": [
+"TextInput"
+],
+"s": 0
+},
+"text": {
+"p": [
+"TextInput"
+],
+"s": 0
+},
+"True": {
+"p": [
+"Text"
+],
+"s": 0
+},
+"False": {
+"p": [
+"Text"
+],
+"s": 0
+},
+"message_cast": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.send_signal(%1)"
+},
+"sound_something_with_block": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.play_sound(%1)"
+},
+"sound_something_wait_with_block": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.play_sound_and_wait(%1)"
+},
+"sound_silent_all": {
+"p": [
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.stop_sound()"
+},
+"sound_from_to": {
+"p": [
+"Block",
+"Block",
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.play_sound_from_to(%1, %2, %3)"
+},
+"calc_rand": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Block",
+"Text"
+],
+"s": 0,
+"py": "random.randint(%2, %4)",
+"_guess": "에디터에서 추출하지 않았다. 같은 모양의 값 블록(index_of_string, combine_something)이 전부 [Text, Block, Text, Block, Text] 라 그 규칙을 따랐다. 쓰는 쪽에 폴백이 있다."
+},
+"change_string_case": {
+"p": [
+"Text",
+"Block",
+"Text",
+"Dropdown",
+"Text"
+],
+"s": 0,
+"py": "%2.upper()",
+"_dropdown": [
+"toUpperCase",
+"toLowerCase"
+],
+"_guess": "위와 같음. 드롭다운 값은 entryjs 가 자바스크립트 메서드 이름을 그대로 쓰는 관례를 따랐다. 틀리면 첫 옵션(대문자)으로 되돌아갈 것이고, 쓰는 쪽이 그걸 감지해 원래 문자열로 폴백한다."
+},
+"is_press_some_key": {
+"p": [
+"Keyboard",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.is_key_pressed(%1)",
+"_verified": "2026-07-30 실기 확인. 추측이 맞았다 — Shift 를 누른 채 ABC 를 치면 연속 대문자가 된다. 즉 [Keyboard, Indicator] 순서에 0번이 키코드."
+},
+"get_date": {
+"p": [
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.value_of_current_time(%1)",
+"_dropdown": [
+"YEAR",
+"MONTH",
+"DAY",
+"HOUR",
+"MINUTE",
+"SECOND"
+],
+"_guess": "2026-07-30 실기: 파라미터 **순서는 맞는 듯하나 옵션 문자열이 틀렸다.** YEAR/MONTH/DAY/HOUR 무엇을 넣어도 전부 연도(2026)가 나온다 — 엔트리가 모르는 옵션 값을 첫 옵션으로 되돌리는 것으로 보인다. 확정하려면 에디터 콘솔에서 Entry.block.get_date.params 를 뽑을 것."
+},
+"when_object_click": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_click_object_on():",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"when_object_click_canceled": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_click_object_off():",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"mouse_clicked": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_click_mouse_on():",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"mouse_click_cancled": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_click_mouse_off():",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"is_clicked": {
+"p": [
+"Text"
+],
+"s": 0,
+"py": "Entry.is_mouse_clicked()",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"coordinate_mouse": {
+"p": [
+"Text",
+"Dropdown",
+"Text"
+],
+"s": 0,
+"py": "Entry.value_of_mouse_pointer(%2)",
+"_dropdown": [
+"x",
+"y"
+],
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"coordinate_object": {
+"p": [
+"Text",
+"DropdownDynamic",
+"Text",
+"Dropdown"
+],
+"s": 0,
+"py": "Entry.value_of_object(%2, %4)",
+"_dropdown": [
+"x",
+"y",
+"rotation",
+"direction",
+"size",
+"picture_index",
+"picture_name"
+],
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"create_clone": {
+"p": [
+"DropdownDynamic",
+"Indicator"
+],
+"s": 0,
+"py": "Entry.make_clone_of(%1)",
+"_note": "DropdownDynamic 값은 변수 id 가 아니라 '자신'을 뜻하는 'self' 또는 오브젝트 id 다.",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"delete_clone": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.remove_this_clone()",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"remove_all_clones": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "Entry.remove_all_clone()",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"when_clone_start": {
+"p": [
+"Indicator"
+],
+"s": 0,
+"py": "def when_make_clone():",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"read_text": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "TTS.read(%1)",
+"_note": "project.json 의 aiUtilizeBlocks 에 'tts' 가 있어야 한다.",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"read_text_wait_with_block": {
+"p": [
+"Block",
+"Indicator"
+],
+"s": 0,
+"py": "TTS.read_and_wait(%1)",
+"_note": "aiUtilizeBlocks 에 'tts' 필요.",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"set_tts_property": {
+"p": [
+"Dropdown",
+"Dropdown",
+"Dropdown",
+"Indicator"
+],
+"s": 0,
+"py": "TTS.set(%1, %2, %3)",
+"_dropdown": [
+"kyuri",
+"jinho",
+"hana",
+"dinna",
+"brown",
+"sally"
+],
+"_note": "목소리/속도/높이. 속도·높이는 '5','3','0','-3','-5'.",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+},
+"get_translated_string": {
+"p": [
+"Dropdown",
+"Block",
+"DropdownDynamic"
+],
+"s": 0,
+"py": "Translate.do(%1, %2, %3)",
+"_dropdown": [
+"ko",
+"en",
+"ja",
+"zh-CN",
+"zh-TW",
+"es",
+"fr",
+"de",
+"ru",
+"pt",
+"th",
+"vi",
+"id",
+"hi"
+],
+"_note": "aiUtilizeBlocks 에 'translate' 필요. 3번째는 대상 언어(출발어에 따라 목록이 달라진다).",
+"_verified": "2026-08-03 실기 확인 완료. 사용자가 build/entry-ppt.ent 를 엔트리에서 열어 마우스 선택·끌기, 사이드바 클릭, 색 견본, 읽어주기, 번역이 전부 동작함을 확인했다."
+}
+}
+}

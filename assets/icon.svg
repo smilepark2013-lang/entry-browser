@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Entry Browser Relay 아이콘 — 왼쪽 색 격자 띠(요청) + 지구본(인터넷) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e293b"/>
+      <stop offset="1" stop-color="#0b1120"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="104" fill="url(#bg)"/>
+  <!-- 격자 띠 -->
+  <g>
+    <rect x="72" y="104" width="28" height="28" rx="5" fill="#38bdf8"/>
+    <rect x="108" y="104" width="28" height="28" rx="5" fill="#f472b6"/>
+    <rect x="72" y="140" width="28" height="28" rx="5" fill="#facc15"/>
+    <rect x="108" y="140" width="28" height="28" rx="5" fill="#34d399"/>
+    <rect x="72" y="176" width="28" height="28" rx="5" fill="#a78bfa"/>
+    <rect x="108" y="176" width="28" height="28" rx="5" fill="#38bdf8"/>
+    <rect x="72" y="212" width="28" height="28" rx="5" fill="#34d399"/>
+    <rect x="108" y="212" width="28" height="28" rx="5" fill="#fb923c"/>
+    <rect x="72" y="248" width="28" height="28" rx="5" fill="#f472b6"/>
+    <rect x="108" y="248" width="28" height="28" rx="5" fill="#facc15"/>
+    <rect x="72" y="284" width="28" height="28" rx="5" fill="#38bdf8"/>
+    <rect x="108" y="284" width="28" height="28" rx="5" fill="#a78bfa"/>
+    <rect x="72" y="320" width="28" height="28" rx="5" fill="#fb923c"/>
+    <rect x="108" y="320" width="28" height="28" rx="5" fill="#34d399"/>
+    <rect x="72" y="356" width="28" height="28" rx="5" fill="#facc15"/>
+    <rect x="108" y="356" width="28" height="28" rx="5" fill="#38bdf8"/>
+  </g>
+  <!-- 지구본 -->
+  <g fill="none" stroke="#60a5fa" stroke-width="20" stroke-linecap="round">
+    <circle cx="314" cy="256" r="122"/>
+    <ellipse cx="314" cy="256" rx="54" ry="122"/>
+    <path d="M206 214 H422 M206 298 H422"/>
+  </g>
+  <!-- 화살표 (격자 → 지구본) -->
+  <path d="M152 432 H392" stroke="#34d399" stroke-width="18" stroke-linecap="round"/>
+  <path d="M370 410 L396 432 L370 454" fill="none" stroke="#34d399" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
