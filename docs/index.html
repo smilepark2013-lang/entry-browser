@@ -329,11 +329,11 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
           <li>검색칸·체크박스·라디오·선택 상자·슬라이더 (GET 양식)</li>
           <li>한글·한자(KS X 1001)·라틴·그리스·키릴·기호·《》 같은 넓은 글자</li>
           <li>렌더 모드(선택, 기본 꺼짐): 앱 안의 Chromium 으로 자바스크립트를 실행하고 사이트의 CSS 색·크기까지 옮김</li>
-          <li>레이아웃 모드(실험 기능, 불안정): 실제 사이트 배치를 쪽 단위로 옮김. 사이트에 따라 글이 겹치거나 자리가 어긋남</li>
+          <li>레이아웃 모드(실험 기능, 불안정): 실제 사이트 배치와 저해상도 그림을 쪽 단위로 옮기고, 링크·버튼·입력 칸을 제자리에서 누름. 사이트에 따라 글이 겹치거나 자리가 어긋남</li>
         </ul>
         <h3>못 하는 것</h3>
         <ul class="feat">
-          <li>그림·동영상·소리 (그림은 대체 글로)</li>
+          <li>동영상·소리, 제대로 된 그림 (줄 목록은 대체 글, 레이아웃 모드는 저해상도 칸)</li>
           <li>로그인·POST 양식·파일 올리기</li>
           <li>누르면 스크립트가 바꾸는 버튼·탭</li>
         </ul>
@@ -368,7 +368,7 @@ pre .copy.done { color: #86efac; border-color: rgba(134,239,172,.5); }
         <div id="entry-desc" style="color:var(--dim);font-size:14px">playentry.org 에서 바로 열 수 있습니다. 중계 앱을 먼저 켜 두세요.</div>
       </div>
       <!-- 엔트리에 작품을 올린 뒤 data-url 에 작품 주소를 넣는다 (예: https://playentry.org/project/...) -->
-      <a class="btn primary" id="entry-btn" data-url="" href="#download">엔트리에서 열기</a>
+      <a class="btn primary" id="entry-btn" data-url="https://playentry.org/project/6adf4b1e9c962a711b24811c" href="#download">엔트리에서 열기</a>
     </div>
     <p class="note">작품 파일(<code>.ent</code>)을 받아 엔트리에서 [작품 불러오기]로 열어도 됩니다.</p>
   </section>

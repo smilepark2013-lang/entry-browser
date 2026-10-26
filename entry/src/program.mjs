@@ -86,8 +86,7 @@ const notFound = (() => {
 // 섬네일은 글상자의 **처음 글자**라서 코드가 돌기 전에도 보인다.
 const SPLASH = {
     [ST.h1]: [['Entry Browser', 30]],
-    [ST.body]: [['엔트리 블록으로 만든 브라우저입니다.', 66], ['중계 앱과 함께 쓰면 진짜 웹 페이지를 봅니다.', 82],
-        ['▶  시작하기를 누르세요', 118]],
+    [ST.body]: [['엔트리 블록으로 만든 브라우저입니다.', 66], ['중계 앱과 함께 쓰면 진짜 웹 페이지를 봅니다.', 82]],
     [ST.small]: [['실험용 · 중계 앱은 화면을 캡처하고 클립보드를 씁니다', 170]],
 };
 const SPLASH_COLOR = { [ST.h1]: C.head, [ST.body]: C.text, [ST.small]: C.dim };
@@ -110,8 +109,8 @@ const cover = [
     coverText('cover_title', 'Entry Browser', { x: 56, y: 84, size: 27, color: '#f8fafc' }),
     coverText('cover_sub1', '엔트리 블록으로 만든', { x: 58, y: 117, size: 12, color: '#cbd5e1' }),
     coverText('cover_sub2', '진짜 웹을 읽는 텍스트 브라우저', { x: 58, y: 135, size: 12, color: '#cbd5e1' }),
-    coverText('cover_feat', '링크 · 양식 · 펼치기 · 한자 · 렌더 모드', { x: 58, y: 163, size: 9, color: '#94a3b8' }),
-    coverText('cover_cta', '시작하기', { x: COVER.cta.x + COVER.cta.w / 2 + 8, y: COVER.cta.y + COVER.cta.h / 2, size: 12, color: '#052e16', align: 0 }),
+    coverText('cover_feat', '링크 · 양식 · 펼치기 · 한자 · 렌더 모드', { x: 58, y: 168, size: 9, color: '#94a3b8' }),
+    coverText('cover_feat2', '레이아웃 모드 — 실제 사이트 모양 그대로', { x: 58, y: 184, size: 9, color: '#94a3b8' }),
     coverText('cover_foot', '중계 앱이 필요합니다  ·  smilepark2013-lang.github.io/entry-browser', { x: 58, y: 252, size: 8, color: '#64748b' }),
     icon('cover', COVER_PIC, 0, 0),
 ];

@@ -92,11 +92,11 @@ export const STRIP_PIC = (() => {
 /**
  * 표지 — 작품 섬네일. 무대 전체(480×270)를 덮는 맨 앞 그림이고, 시작하면 숨는다 (program.mjs).
  * 도형만 그린다 (위 ⚠ — 글자는 그 위의 글상자가 쓴다: COVER_TEXT 자리와 맞춘다).
- *   왼쪽: 제목 자리 · 실험용 배지 테두리 · 시작 단추     오른쪽: 브라우저 모형 (띠 격자 → 카드)
+ *   왼쪽: 제목 자리 · 실험용 배지 테두리     오른쪽: 브라우저 모형 (띠 격자 → 카드)
  */
-export const COVER = { W: 480, H: 270, badge: { x: 58, y: 34, w: 104, h: 20 }, cta: { x: 58, y: 200, w: 124, h: 32 } };
+export const COVER = { W: 480, H: 270, badge: { x: 58, y: 34, w: 104, h: 20 } };
 export const COVER_PIC = (() => {
-    const { W, H, badge: b, cta: c } = COVER;
+    const { W, H, badge: b } = COVER;
     const cells = ['#38bdf8', '#f472b6', '#facc15', '#34d399', '#a78bfa', '#fb923c'];
     let grid = '';
     for (let r = 0; r < 16; r++) for (let k = 0; k < 2; k++) {
@@ -115,10 +115,8 @@ export const COVER_PIC = (() => {
         + `<radialGradient id="gl" cx="0.78" cy="0.35" r="0.55"><stop offset="0" stop-color="#2563eb" stop-opacity="0.35"/><stop offset="1" stop-color="#2563eb" stop-opacity="0"/></radialGradient></defs>`
         + `<rect width="${W}" height="${H}" fill="url(#cv)"/><rect width="${W}" height="${H}" fill="url(#gl)"/>`
         + grid
-        // 배지 테두리 · 시작 단추 (▶ 는 도형)
+        // 배지 테두리
         + `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="${b.h / 2}" fill="#451a03" fill-opacity="0.5" stroke="#fbbf24" stroke-width="1.2"/>`
-        + `<rect x="${c.x}" y="${c.y}" width="${c.w}" height="${c.h}" rx="${c.h / 2}" fill="#22c55e"/>`
-        + `<path d="M${c.x + 18} ${c.y + 10} L${c.x + 29} ${c.y + 16} L${c.x + 18} ${c.y + 22} Z" fill="#052e16"/>`
         // 카드
         + `<rect x="${X + 3}" y="${Y + 5}" width="${CW}" height="${CH}" rx="12" fill="#000" opacity="0.35"/>`
         + `<rect x="${X}" y="${Y}" width="${CW}" height="${CH}" rx="12" fill="#ffffff"/>`

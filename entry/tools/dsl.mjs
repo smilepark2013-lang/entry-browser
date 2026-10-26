@@ -443,14 +443,19 @@ export function defineProject(spec) {
         const a = filename.slice(0, 2);
         const b = filename.slice(2, 4);
         const url = `temp/${a}/${b}/image/${filename}.${q.ext}`;
+        const thumb = `temp/${a}/${b}/thumb/${filename}.${q.ext}`;
         assets.push({ path: url, data: q.data });
-        assets.push({ path: `temp/${a}/${b}/thumb/${filename}.${q.ext}`, data: q.data });
+        assets.push({ path: thumb, data: q.data });
         return {
             id: newId(),
             name: q.name,
             filename,
             imageType: q.ext,
             fileurl: url,
+            // 🔴 thumbUrl 이 없으면 불러올 때는 그림이 다 보여도 **저장하면 안 남는다** — 모양 탭에서
+            //   그림마다 [저장하기]를 눌러야 했다 (entry-browser, 2026-10-26 · 두 번째). 엔트리가 저장하는
+            //   그림 항목(entryjs Entry.getPicturesJSON)에는 thumbUrl 이 있고, 섬네일 파일을 넣었으면 가리켜야 한다.
+            thumbUrl: thumb,
             dimension: {
                 width: q.width, height: q.height,
                 scaleX: 1, scaleY: 1,

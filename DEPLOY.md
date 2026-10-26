@@ -61,8 +61,10 @@ git push origin v0.1.0
 ## 4. 엔트리 작품 올리기 (처음 한 번, 작품이 바뀌면 다시)
 
 1. 릴리스의 `entry-browser.ent` (또는 `entry/build/entry-browser.ent`)를 엔트리에서 [작품 불러오기].
+   **실행하지 않은 채로 저장합니다** — 엔트리는 저장할 때 무대를 찍어 섬네일로 쓰는데, 표지는 시작하면 숨습니다.
 2. 작품 이름: `Entry Browser (실험용)` — 설명은 [`docs/entry-project.md`](docs/entry-project.md) 를 붙여 넣습니다.
 3. 공유하고 작품 주소(`https://playentry.org/project/...`)를 얻습니다.
+   (지금 주소: https://playentry.org/project/6adf4b1e9c962a711b24811c)
 4. 그 주소를 두 곳에 넣고 다시 올립니다:
    - `docs/index.html` 의 `<a ... id="entry-btn" data-url="">` → `data-url="<작품 주소>"`
    - `README.md` 맨 위 링크 줄 (원하면)
