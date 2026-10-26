@@ -21,10 +21,10 @@ import {
     penDown, penUp, penColor, penSize, penClear, makeCloneOf, removeAllClones, mouseX, mouseY,
 } from '../tools/dsl.mjs';
 import { CODES, VIEW_W } from '../../src/lib/display.mjs';
-import { LAYOUT_SIZES } from '../../src/lib/pager.mjs';
+import { LAYOUT_SIZES, LAY_LINE_H as LINE_H } from '../../src/lib/pager.mjs';
 import { VIEW } from './theme.mjs';
 
-export const LAY_LINE_H = LAYOUT_SIZES.map((s) => Math.round(s * 1.5));   // 원본 글상자 높이
+export const LAY_LINE_H = LINE_H;           // 원본 글상자 높이 (pager 와 같은 값 — 조각의 y 가 이 상자 기준이다)
 const STRIP = 48;                    // 붓 굵기 상한 — 그보다 높은 상자는 띠 여러 개로
 const LJ_BATCH = 250;                // 그림 구간을 한 바퀴에 몇 개 그리나 (재귀 깊이)
 

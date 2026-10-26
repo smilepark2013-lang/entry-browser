@@ -242,6 +242,7 @@ const EXTRACT = `(() => {
 // Chromium 이 실제로 놓은 자리를 그리기 목록으로 뽑는다 (pager.mjs 가 쪽으로 나눈다).
 export const LAYOUT_W = 600;          // CSS px. 엔트리 본문 366px 에 맞추면 0.61배 — 본문 16px 이 엔트리 10px 쯤
 const LAYOUT_MAX_H = 9000;            // 이보다 긴 페이지는 자른다 (엔트리 쪽 수 한도)
+const LAYOUT_MAX_W = 1200;            // 최소 폭이 넓은 페이지도 이 폭까지는 통째로 담는다 (그만큼 작게)
 const FORCE_CSS = `*, *::before, *::after { font-family: "Malgun Gothic", "맑은 고딕", sans-serif !important; letter-spacing: normal !important; }
 ::-webkit-scrollbar { display: none !important; } html { scrollbar-width: none !important; }`;
 
@@ -250,9 +251,19 @@ async function takeLayout(w, wc, { capture = true } = {}) {
     const h = await wc.executeJavaScriptInIsolatedWorld(1002, [{ code: `Math.min(document.documentElement.scrollHeight, ${LAYOUT_MAX_H})` }]);
     w.setContentSize(LAYOUT_W, Math.max(600, Math.ceil(h)));
     await sleep(350);
+    // 최소 폭이 창보다 넓은 페이지(덕덕고 HTML 판은 655px)는 오른쪽이 넘쳐 카드 밖으로 나가고 캡처에서도 잘렸다.
+    // 창을 그 폭(최대 LAYOUT_MAX_W)으로 늘려 다시 재고, pager 가 그 폭에 맞춰 줄인다.
+    let width = LAYOUT_W;
+    const sw = await wc.executeJavaScriptInIsolatedWorld(1002, [{ code: 'document.documentElement.scrollWidth' }]);
+    if (sw > LAYOUT_W + 4) {
+        width = Math.min(LAYOUT_MAX_W, Math.ceil(sw));
+        const h2 = await wc.executeJavaScriptInIsolatedWorld(1002, [{ code: `Math.min(document.documentElement.scrollHeight, ${LAYOUT_MAX_H})` }]);
+        w.setContentSize(width, Math.max(600, Math.ceil(h2)));
+        await sleep(350);
+    }
     for (let i = 0; i < 25 && busy(wc); i++) await sleep(100);     // 늘어난 자리의 지연 로딩 그림
     const list = await wc.executeJavaScriptInIsolatedWorld(1002, [{ code: LAYOUT }]);
-    list.width = LAYOUT_W;
+    list.width = width;
     // 그림 — 화면을 한 번 캡처해 그림 자리만 칸으로 줄인다 (교차 출처 그림도 캡처는 된다).
     // 대체 글 모드면 캡처하지 않는다 (pager 가 회색 상자 + 대체 글로 그린다)
     if (capture && list.images.length) {
@@ -260,18 +271,17 @@ async function takeLayout(w, wc, { capture = true } = {}) {
             const img = await wc.capturePage();
             const size = img.getSize();
             const bmp = img.toBitmap();                                 // BGRA
-            const sc = size.width / LAYOUT_W;
+            const sc = size.width / width;
             let lit = 0;
             for (let i = 3; i < bmp.length; i += 4 * 997) lit += bmp[i];
-            if (lit > 0) for (const im of list.images) im.px = cellsOf(bmp, size, sc, im);
+            if (lit > 0) for (const im of list.images) im.px = cellsOf(bmp, size, sc, im, 366 / width);
         } catch { /* 캡처가 안 되면 그림은 빠진다 */ }
     }
     return { layout: list };
 }
 
 /** 그림 자리 → 칸 (열 최대 48, 줄 최대 40, 엔트리에서 칸 4px 안팎) */
-function cellsOf(bmp, size, sc, im) {
-    const k = 366 / LAYOUT_W;
+function cellsOf(bmp, size, sc, im, k) {
     const cols = Math.max(1, Math.min(48, Math.round((im.w * k) / 4)));
     const cw = im.w / cols;
     const rows = Math.max(1, Math.min(40, Math.round(im.h / cw)));

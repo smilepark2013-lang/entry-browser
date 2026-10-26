@@ -17,13 +17,15 @@
 //   Z<SSS><XXX><YYY><WWW><K><C><B><LLLL><글>       글 조각 — … · 크기 단계(LAYOUT_SIZES 의 자리) · 색 · 굵게(0/1) · 링크
 //   J<SSS><XXX><YYY><N><CC><색·길이 쌍…>            그림 — … · 칸 크기 px(1~9) · 열 수 · 같은 색이 이어지는 칸 (색 번호, 길이 1~61)
 
-import { VIEW_W, VIEW_H, CODES, COLORS, MAX_LINKS, richText } from './display.mjs';
+import { VIEW_W, VIEW_H, CODES, COLORS, MAX_LINKS, richText, charW } from './display.mjs';
 import { makePalette, readable, contrast } from './css.mjs';
 import { makeLinker } from './layout.mjs';
 import { entryChars as entryCharsBase } from './simplify.mjs';
 
 /** 글 크기 단계 (엔트리 px). 엔트리 쪽은 단계마다 원본 글상자 하나를 두고 복제한다 */
 export const LAYOUT_SIZES = [7, 8, 9, 10, 11, 12, 14, 17, 20, 24, 28];
+/** 원본 글상자 높이 (엔트리 쪽 lay.mjs 가 같은 값을 쓴다). 조각의 세로 가운데를 이 상자 가운데에 맞춘다 */
+export const LAY_LINE_H = LAYOUT_SIZES.map((s) => Math.round(s * 1.5));
 export const LAYOUT_LIMITS = {
     texts: 4000, boxes: 4000, images: 60,        // 엔트리 리스트 5000항목 안쪽
     textsPerScreen: 300,                          // 원본 하나당 복제본 360개 한도 안쪽 (여유)
@@ -34,6 +36,8 @@ export const LAYOUT_LIMITS = {
 const MAX_BODY = 120_000;
 
 const entryChars = (s) => entryCharsBase(s, { rich: true });
+/** 맑은 고딕으로 그릴 때의 폭 (엔트리 px) */
+const widthAt = (s, size) => [...s].reduce((a, ch) => a + charW(ch, false, 'malgun'), 0) * size;
 const p = (n, w) => String(Math.max(0, Math.min(10 ** w - 1, Math.round(n)))).padStart(w, '0');
 
 /** 크기 → 단계 번호 (내림 — 맑은 고딕으로 그리므로 크면 넘친다) */
@@ -106,7 +110,8 @@ export function pageLayout(list, url, { title = '', images: imageMode = 'pixel' 
 
     // ---- 엔트리 px 로
     const S = (v) => v * k;
-    const boxes = list.boxes.map((b) => ({ x: S(b.x), y: S(b.y), w: S(b.w), h: S(b.h), c: b.c }))
+    // 1px 테두리는 0.61배로 줄면 사라졌다 (덕덕고 검색창) — 원래 0.5px 이상이면 최소 1px 로 남긴다
+    const boxes = list.boxes.map((b) => ({ x: S(b.x), y: S(b.y), w: b.w >= 0.5 ? Math.max(1, S(b.w)) : 0, h: b.h >= 0.5 ? Math.max(1, S(b.h)) : 0, c: b.c }))
         .filter((b) => b.w >= 0.8 && b.h >= 0.8 && b.x < VIEW_W);
     // 그리는 순서 — 큰 상자가 뒤 (붓은 나중 획이 위에 온다). 문서 순서대로 그렸더니 음수 z-index 로 뒤에 깔린
     // 거대한 배경(깃허브의 검은 바탕)이 앞의 흰 띠를 덮었다. 넓은 배경은 대개 작은 카드·띠 뒤에 있다.
@@ -115,8 +120,12 @@ export function pageLayout(list, url, { title = '', images: imageMode = 'pixel' 
     for (const t of list.texts) {
         const text = richText(entryChars(String(t.t))).replace(/[\t\r\n]+/g, ' ').trim();
         if (!text) continue;
-        if (t.x < -2 || t.x > list.width) continue;                  // 화면 밖
-        texts.push({ x: Math.max(0, S(t.x)), y: S(t.y), w: S(t.w), h: S(t.h), t: text, s: sizeCode(S(t.s)), c: t.c, b: t.b ? 1 : 0, href: t.href });
+        if (t.x < -2 || t.x > list.width - 4) continue;              // 화면 밖
+        const s = sizeCode(S(t.s));
+        // 오른쪽으로 넘치는 글은 자른다 (맑은 고딕 실측 폭) — 글상자는 카드 밖까지 그려진다
+        let shown = text; const room = VIEW_W - Math.max(0, S(t.x));
+        while (shown.length > 1 && widthAt(shown, LAYOUT_SIZES[s]) > room) shown = shown.slice(0, -1);
+        texts.push({ x: Math.max(0, S(t.x)), y: S(t.y), w: Math.min(S(t.w), room), h: S(t.h), t: shown.trimEnd(), s, c: t.c, b: t.b ? 1 : 0, href: t.href });
     }
     // 그림 — 'pixel' 이면 칸으로 줄인 그림, 'alt' 이거나 칸이 없으면 회색 상자 + "[그림] 대체 글"
     const images = []; const altImages = [];
@@ -173,7 +182,9 @@ export function pageLayout(list, url, { title = '', images: imageMode = 'pixel' 
         count.Z[s]++;
         const color = pal.fg(readable(t.c || COLORS[0], under(t)));
         const link = t.href ? linkOf(t.href) : 0;
-        out.Z.push(`Z${p(s + 1, 3)}${p(t.x, 3)}${p(t.y - breaks[s], 3)}${p(t.w, 3)}${CODES[t.s]}${color}${t.b}${p(link, 4)}${t.t}`);
+        // 조각의 세로 가운데 = 원본 글상자(LAY_LINE_H) 가운데 — 엔트리는 y + 상자높이/2 에 놓는다
+        const y = Math.max(0, t.y + t.h / 2 - LAY_LINE_H[t.s] / 2 - breaks[s]);
+        out.Z.push(`Z${p(s + 1, 3)}${p(t.x, 3)}${p(y, 3)}${p(t.w, 3)}${CODES[t.s]}${color}${t.b}${p(link, 4)}${t.t}`);
     }
     let cells = new Array(screens).fill(0);
     for (const im of images) {
@@ -181,23 +192,28 @@ export function pageLayout(list, url, { title = '', images: imageMode = 'pixel' 
         const s = screenOf(im.y);
         const { cols, rows } = im.px;
         const cell = Math.max(1, Math.min(9, Math.round(im.w / cols)));
+        // 오른쪽으로 넘치는 열은 자른다
+        const useCols = Math.max(0, Math.min(cols, Math.floor((VIEW_W - im.x) / cell)));
+        if (!useCols) continue;
         const room = Math.floor((breaks[s + 1] - im.y) / cell);       // 쪽 아래로 넘치는 줄은 자른다
         const useRows = Math.max(0, Math.min(rows, room));
         if (!useRows || cells[s] + cols * useRows > LAYOUT_LIMITS.cellsPerScreen) continue;
         cells[s] += cols * useRows;
-        // 그림마다 8색으로 줄이고 페이지 색표에 넣는다
-        const q = quantize(im.px.cells.slice(0, cols * useRows), 8).map((h) => pal.fg(h));
+        // 그림마다 8색으로 줄이고 페이지 색표에 넣는다 (넘치는 열을 뺀 칸만)
+        const kept = [];
+        for (let r = 0; r < useRows; r++) kept.push(...im.px.cells.slice(r * cols, r * cols + useCols));
+        const q = quantize(kept, 8).map((h) => pal.fg(h));
         let rle = '';
         for (let r = 0; r < useRows; r++) {
-            let i = r * cols;
-            while (i < (r + 1) * cols) {
+            let i = r * useCols;
+            while (i < (r + 1) * useCols) {
                 let n = 1;
-                while (i + n < (r + 1) * cols && q[i + n] === q[i] && n < CODES.length - 1) n++;
+                while (i + n < (r + 1) * useCols && q[i + n] === q[i] && n < CODES.length - 1) n++;
                 rle += q[i] + CODES[n];
                 i += n;
             }
         }
-        out.J.push(`J${p(s + 1, 3)}${p(im.x, 3)}${p(im.y - breaks[s], 3)}${cell}${p(cols, 2)}${rle}`);
+        out.J.push(`J${p(s + 1, 3)}${p(im.x, 3)}${p(im.y - breaks[s], 3)}${cell}${p(useCols, 2)}${rle}`);
     }
 
     // 쪽 순서대로 (엔트리는 쪽마다 첫 항목 자리를 적어 둔다)
