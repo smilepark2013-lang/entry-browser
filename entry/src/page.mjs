@@ -114,7 +114,8 @@ export function build(ctx) {
     ];
     const repaint = [call('rd_lay'), sendSignal('sig_paint')];
 
-    const form = formMod.build({ ...ctx, put, go, repaint, lineOf, yOf });
+    // 레이아웃 모드에서는 칸 줄이 없다 — 덧그림(sig_lov)이 칸의 상태를 다시 그린다
+    const form = formMod.build({ ...ctx, put, go, repaint: [...repaint, sendSignal('sig_lov')], lineOf, yOf });
     const lay = layMod.build({ ...ctx, put, go });
 
     // ================================================================== 받기

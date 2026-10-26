@@ -16,8 +16,11 @@
 //   X<SSS><XXX><YYY><WWW><HHH><C>                 상자 — 쪽 · x · y(쪽 안) · 폭 · 높이 · 색 번호
 //   Z<SSS><XXX><YYY><WWW><K><C><B><LLLL><글>       글 조각 — … · 크기 단계(LAYOUT_SIZES 의 자리) · 색 · 굵게(0/1) · 링크
 //   J<SSS><XXX><YYY><N><CC><색·길이 쌍…>            그림 — … · 칸 크기 px(1~9) · 열 수 · 같은 색이 이어지는 칸 (색 번호, 길이 1~61)
+//   H<SSS><XXX><YYY><WWW><HHH><K><NNNN><C>         누를 자리 — … · L 링크(N = 링크 번호) / F 칸(엔트리가 상태를 그 위에 그린다)
+//                                                  / G 칸의 이름표·보내기 단추(누르기만) · N = 칸 번호 · C = 칸 바탕색
+//   F · I · O                                      양식 · 칸 · 선택지 (layout.mjs 와 같은 꼴 — 엔트리 form.mjs 가 다룬다)
 
-import { VIEW_W, VIEW_H, CODES, COLORS, MAX_LINKS, richText, charW } from './display.mjs';
+import { VIEW_W, VIEW_H, CODES, COLORS, MAX_LINKS, FIELD, richText, charW, readableUrl } from './display.mjs';
 import { makePalette, readable, contrast } from './css.mjs';
 import { makeLinker } from './layout.mjs';
 import { entryChars as entryCharsBase } from './simplify.mjs';
@@ -30,6 +33,8 @@ export const LAYOUT_LIMITS = {
     texts: 4000, boxes: 4000, images: 60,        // 엔트리 리스트 5000항목 안쪽
     textsPerScreen: 300,                          // 원본 하나당 복제본 360개 한도 안쪽 (여유)
     boxesPerScreen: 400,
+    areas: 3000, areasPerScreen: 300,             // 누를 자리 (누를 때 이 쪽 것만 훑는다 — 재귀 깊이)
+    overlaysPerScreen: 60,                        // 상태를 그리는 칸 (덧그림 글상자 복제본 수)
     cellsPerScreen: 6000,                         // 그림 칸 (붓 획 수의 위쪽 한도)
     screens: 40,
 };
@@ -216,20 +221,82 @@ export function pageLayout(list, url, { title = '', images: imageMode = 'pixel' 
         out.J.push(`J${p(s + 1, 3)}${p(im.x, 3)}${p(im.y - breaks[s], 3)}${cell}${p(useCols, 2)}${rle}`);
     }
 
+    // ---- 양식 · 누를 자리
+    const { formLines, areaLines } = formsOf(list, url, S, breaks, screenOf, linkOf, (r) => pal.fg(under(r)));
+
     // 쪽 순서대로 (엔트리는 쪽마다 첫 항목 자리를 적어 둔다)
     const byScreen = (a, b) => a.slice(1, 4).localeCompare(b.slice(1, 4));
     for (const kk of ['X', 'Z', 'J']) out[kk].sort(byScreen);
+    areaLines.sort(byScreen);
 
     const make = (n) => {
         const keep = (arr) => arr.filter((l) => Number(l.slice(1, 4)) <= n);
         const body = [`T${entryChars(title).replace(/\s+/g, ' ').trim()}`, ...links.slice(0, MAX_LINKS).map((u) => `U${u}`),
-            ...pal.lines(page), `M${n}`, ...keep(out.X), ...keep(out.Z), ...keep(out.J)].join('\n');
+            ...pal.lines(page), ...formLines, `M${n}`, ...keep(out.X), ...keep(out.Z), ...keep(out.J), ...keep(areaLines)].join('\n');
         return body;
     };
     let n = screens;
     let body = make(n);
     while (Buffer.byteLength(body) > MAX_BODY && n > 1) body = make(--n);
-    return { body, screens: n, texts: out.Z.length, boxes: out.X.length, images: out.J.length, truncated: n < screens };
+    return { body, screens: n, texts: out.Z.length, boxes: out.X.length, images: out.J.length, areas: areaLines.length, truncated: n < screens };
+}
+
+/**
+ * 양식(F·I·O)과 누를 자리(H). 칸 번호는 I 줄 순서 그대로다 — 엔트리의 fm_* 리스트 자리.
+ * 보내기는 엔트리가 GET 으로만 한다. 검색 칸 하나뿐인 POST 양식(덕덕고)은 GET 으로 바꾸고 (layout.mjs 와 같다),
+ * 그 밖의 POST 양식은 그대로 둔다 — 엔트리가 보내지 않는다.
+ */
+function formsOf(list, url, S, breaks, screenOf, linkOf, bgOf) {
+    const clean = (s, max = 60) => entryChars(String(s ?? '')).replace(/[\t\n\r]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max);
+    const resolve = (href) => {
+        try {
+            const u = new URL(href, url);
+            if (u.protocol !== 'http:' && u.protocol !== 'https:') return '';
+            u.hash = '';
+            return entryChars(readableUrl(u.href)).replace(/\s/g, '%20');
+        } catch { return ''; }
+    };
+    const forms = (list.forms || []).map((f) => {
+        const action = resolve(f.action);
+        return { method: action ? f.method : 'P', action };
+    });
+    const fields = (list.fields || []).map((f) => ({
+        ...f, name: clean(f.name, 80), value: clean(f.value, f.type === FIELD.text ? 200 : 120),
+        label: clean(f.label, f.type === FIELD.submit ? 30 : 60) || (f.type === FIELD.submit ? '보내기' : ''),
+    }));
+    forms.forEach((f, i) => {
+        if (f.method !== 'P' || !f.action) return;
+        const texts = fields.filter((x) => x.form === i + 1 && x.type === FIELD.text);
+        if (texts.length === 1 && /^(q|query|search|keyword|kw|wd|s|term)$/i.test(texts[0].name)) f.method = 'G';
+    });
+    const formLines = [
+        ...forms.map((f) => `F${f.method}\t${f.action}`),
+        ...fields.map((f) => `I${[f.form, f.type, f.name, f.value, f.label, f.on, f.min, f.max, f.step].join('\t')}`),
+        ...(list.options || []).map((o) => `O${[o.field, clean(o.value, 120), clean(o.label, 50), o.selected].join('\t')}`),
+    ];
+
+    const areaLines = [];
+    const perScreen = new Map(); const overlays = new Map();
+    for (const a of list.areas || []) {
+        if (areaLines.length >= LAYOUT_LIMITS.areas) break;
+        let n;
+        if (a.k === 'L') { n = linkOf(a.n); if (!n) continue; } else n = a.n;
+        const x0 = Math.max(0, S(a.x)); const x1 = Math.min(VIEW_W, S(a.x + a.w));
+        if (x1 - x0 < 2) continue;
+        const y0 = S(a.y); const y1 = S(a.y + a.h);
+        const s = screenOf(y0 + (y1 - y0) / 2);           // 가운데가 든 쪽 하나에만 (쪽 경계에 걸친 칸이 두 번 그려지지 않게)
+        const top = Math.max(y0, breaks[s]) - breaks[s]; const bot = Math.min(y1, breaks[s + 1]) - breaks[s];
+        if (bot - top < 2) continue;
+        if ((perScreen.get(s) || 0) >= LAYOUT_LIMITS.areasPerScreen) continue;
+        if (a.k === 'F') {
+            if ((overlays.get(s) || 0) >= LAYOUT_LIMITS.overlaysPerScreen) continue;
+            overlays.set(s, (overlays.get(s) || 0) + 1);
+        }
+        perScreen.set(s, (perScreen.get(s) || 0) + 1);
+        const bg = bgOf({ x: x0, y: y0, w: x1 - x0, h: y1 - y0 });
+        areaLines.push(`H${p(s + 1, 3)}${p(x0, 3)}${p(top, 3)}${p(x1 - x0, 3)}${p(bot - top, 3)}${a.k}${p(n, 4)}${bg}`);
+    }
+    return { formLines, areaLines };
 }
 
 export { contrast };

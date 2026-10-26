@@ -135,6 +135,20 @@ export class Sim {
         throw new Error(`함수 없음: ${name}`);
     }
 
+    /** '마우스를 클릭했을 때'(무대 어디든) — 그 스레드가 있는 오브젝트를 모두 실행한다. 자리는 this.mouse */
+    runMouse() {
+        let n = 0;
+        for (const obj of this.p.objects) {
+            const ts = JSON.parse(obj.script).filter((th) => th[0].type === 'mouse_clicked');
+            if (!ts.length) continue;
+            const prev = this.self;
+            this.self = obj.name;
+            for (const t of ts) { this.execSeq(t.slice(1)); n++; }
+            this.self = prev;
+        }
+        return n;
+    }
+
     /** 오브젝트의 '신호를 받았을 때' 스레드를 찾아 실행한다. */
     runSignal(objName, sigName) {
         const obj = this.p.objects.find((o) => o.name === objName);

@@ -332,6 +332,61 @@ const LAYOUT = `(() => {
     const effBg = new Map();
     const ICON = /material-(icons|symbols)|(^|\\s)(fa|fas|far|fab|bi|icon|glyphicon)(\\s|-|$)/i;
     const R = (r) => ({ x: r.left + scrollX, y: r.top + scrollY, w: r.width, h: r.height });
+    const shown = (el) => el.checkVisibility({ visibilityProperty: true, opacityProperty: true });
+    // 양식 — layout.mjs 와 같은 꼴 (엔트리 form.mjs 가 그대로 쓴다). 값은 지금 DOM 의 값이다.
+    // 누를 자리(areas): k = 'L' 링크 · 'F' 칸 자신(엔트리가 그 위에 상태를 그린다) · 'G' 칸의 이름표
+    const forms = [], fields = [], options = [], areas = [];
+    const overlaid = new Set();                 // 엔트리가 상태를 그리는 칸 — 글 조각으로는 싣지 않는다
+    const formIx = new Map();
+    for (const f of document.querySelectorAll('form')) {
+        formIx.set(f, forms.length + 1);
+        let action = '';
+        try { action = new URL(f.getAttribute('action') || '', document.baseURI).href; } catch {}
+        forms.push({ method: (f.getAttribute('method') || 'get').toLowerCase() === 'post' ? 'P' : 'G', action });
+    }
+    const labelOf = (el) => el.getAttribute('aria-label') || (el.labels && el.labels[0] ? el.labels[0].innerText : '')
+        || el.getAttribute('placeholder') || el.getAttribute('title') || el.getAttribute('name') || '';
+    const area = (el, k, n) => {
+        if (areas.length >= 3000 || !shown(el)) return;
+        for (const r of [...el.getClientRects()].slice(0, 4)) {
+            if (r.width >= 3 && r.height >= 3 && r.top + scrollY < MAXH) areas.push({ ...R(r), k, n });
+        }
+    };
+    for (const el of body ? body.querySelectorAll('input, select, textarea, button') : []) {
+        if (el.disabled || fields.length >= 400) continue;
+        const tag = el.tagName;
+        const form = el.form ? (formIx.get(el.form) || 0) : 0;
+        const name = el.getAttribute('name') || '';
+        const type = tag === 'INPUT' ? (el.getAttribute('type') || 'text').toLowerCase() : tag === 'BUTTON' ? (el.getAttribute('type') || 'submit').toLowerCase() : '';
+        const add = (f, own) => {
+            fields.push({ on: 0, min: 0, max: 0, step: 0, label: '', value: '', name, form, ...f });
+            const n = fields.length;
+            if (own) { overlaid.add(el); area(el, 'F', n); } else area(el, 'G', n);
+            if (el.labels) for (const lab of el.labels) area(lab, 'G', n);
+            return n;
+        };
+        if (tag === 'SELECT') {
+            const opts = [...el.options].filter((o) => !o.disabled);
+            if (!opts.length) continue;
+            const first = options.length + 1;
+            let sel = opts.findIndex((o) => o.selected); if (sel < 0) sel = 0;
+            const n = fields.length + 1;
+            opts.forEach((o, i) => options.push({ field: n, value: o.value, label: o.textContent, selected: i === sel ? 1 : 0 }));
+            add({ type: 'o', value: opts[sel].value, label: labelOf(el), on: first + sel, min: first, max: options.length }, true);
+        } else if (tag === 'TEXTAREA') add({ type: 't', value: el.value, label: labelOf(el) || '입력' }, true);
+        else if (type === 'hidden') {
+            if (form && name && !/^(ie|oe|_charset_|charset)$/i.test(name) && el.value.length <= 40) fields.push({ on: 0, min: 0, max: 0, step: 0, label: '', type: 'h', name, value: el.value, form });
+        } else if (type === 'submit' || type === 'image') {
+            if (form) add({ type: 's', value: el.getAttribute('value') || '', label: (tag === 'BUTTON' ? el.innerText : el.value || el.alt) || '보내기' }, false);
+        } else if (type === 'checkbox' || type === 'radio') {
+            if (form) add({ type: type === 'checkbox' ? 'c' : 'r', value: el.value || 'on', label: labelOf(el) || name, on: el.checked ? 1 : 0 }, true);
+        } else if (type === 'range') {
+            fields.push({ type: 'g', name, form, value: el.value, label: labelOf(el), on: 0, min: Number(el.min) || 0, max: Number(el.max) || 100, step: Number(el.step) || 1 });
+        } else if (tag === 'INPUT' && !/^(password|file|button|reset|color)$/.test(type)) add({ type: 't', value: el.value, label: labelOf(el) || '입력' }, true);
+    }
+    for (const a of body ? body.querySelectorAll('a[href]') : []) {
+        if (/^https?:/i.test(a.href)) area(a, 'L', a.href);
+    }
     for (const el of body ? body.querySelectorAll('*') : []) {
         const up = effBg.get(el.parentElement) || page;
         const tag = el.tagName;
@@ -359,7 +414,7 @@ const LAYOUT = `(() => {
             if (tag !== 'PICTURE') images.push({ ...R(r), alt: el.getAttribute && (el.getAttribute('alt') || '') });
         }
         // 입력 칸의 글 (글 마디가 아니라 값·안내문이다)
-        if ((tag === 'INPUT' && !/^(hidden|checkbox|radio|range|file|image|color)$/i.test(el.type)) || tag === 'TEXTAREA' || tag === 'SELECT') {
+        if (((tag === 'INPUT' && !/^(hidden|checkbox|radio|range|file|image|color)$/i.test(el.type)) || tag === 'TEXTAREA' || tag === 'SELECT') && !overlaid.has(el)) {
             const t = tag === 'SELECT' ? (el.selectedOptions[0]?.textContent || '') : (el.value || el.placeholder || '');
             if (t.trim() && el.type !== 'password') {
                 const fs = parseFloat(cs.fontSize) || 14;
@@ -436,5 +491,5 @@ const LAYOUT = `(() => {
         }
         flush();
     }
-    return { page, height: Math.min(root.scrollHeight, MAXH), title: document.title, boxes, texts, images };
+    return { page, height: Math.min(root.scrollHeight, MAXH), title: document.title, boxes, texts, images, forms, fields, options, areas };
 })()`;

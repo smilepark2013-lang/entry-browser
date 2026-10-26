@@ -413,6 +413,7 @@ console.log('\n4. 잘못된 응답 · 너무 긴 주소 · 없는 페이지');
             ],
             images: [{ x: 300, y: 100, w: 120, h: 80, px: { cols: 6, rows: 4, cells: Array.from({ length: 24 }, (_, i) => (i % 2 ? '#112233' : '#eeddcc')) } }],
         };
+        list.areas = list.texts.filter((t) => t.href).map((t) => ({ x: t.x, y: t.y, w: t.w, h: t.h, k: 'L', n: t.href }));
         // 그림 대체 글 모드 — 칸 대신 회색 상자 + "[그림] 대체 글"
         {
             const alt = { ...list, images: [{ ...list.images[0], alt: '고양이 사진' }] };
@@ -448,14 +449,18 @@ console.log('\n4. 잘못된 응답 · 너무 긴 주소 · 없는 페이지');
         broadcast(tl, 'sig_lay');
         const z2 = P.body.split('\n').filter((l) => l.startsWith('Z002'));
         eq('  2쪽 복제본으로 바뀐다 (1쪽 것은 지운다)', shownClones().length, z2.length);
-        // 링크 조각 누르기 — 복제본의 클릭 스레드는 원본 것 (마우스 자리로 링크를 고른다)
-        // Z<SSS><XXX><YYY><WWW><K><C><B><LLLL><글> — 링크는 16..19 번째 글자
-        const zl = z2.find((l) => Number(l.slice(16, 20)) > 0);
-        const [x, y] = [Number(zl.slice(4, 7)), Number(zl.slice(7, 10))];
+        // 링크 누르기 — 무대를 누르면(mouse_clicked) 이 쪽의 누를 자리(H)를 훑는다
+        // H<SSS><XXX><YYY><WWW><HHH><K><NNNN><C>
+        const hl = P.body.split('\n').find((l) => l.startsWith('H002') && l[16] === 'L');
+        const [x, y] = [Number(hl.slice(4, 7)), Number(hl.slice(7, 10))];
         tl.mouse = { x: VIEW.left + x + 3, y: VIEW.top - y - 4 };
         tl.setVar('nv_to', '');
-        sigs(tl, () => tl.runClick(`lt${LAYOUT_SIZES[CODES.indexOf(zl[13])]}`));
-        eq('  링크 조각을 누르면 그 링크로', tl.getVar('nv_to'), pb.links[Number(zl.slice(16, 20)) - 1].replace(/^\//, 'https://news.example.com/'));
+        sigs(tl, () => tl.runMouse());
+        eq('  링크 자리를 누르면 그 링크로', tl.getVar('nv_to'), pb.links[Number(hl.slice(17, 21)) - 1].replace(/^\//, 'https://news.example.com/'));
+        tl.mouse = { x: VIEW.left + 360, y: VIEW.top - 200 };
+        tl.setVar('nv_to', '');
+        sigs(tl, () => tl.runMouse());
+        eq('  빈 자리를 누르면 아무 일 없음', tl.getVar('nv_to'), '');
         // 일반 페이지로 가면 복제본·붓을 지운다
         const plain = 'https://example.com/after-layout';
         visit(tl, plain, answerWith(plain, layoutHtml('<p>평범한 페이지</p>', plain, { mode: 'full' }).body));
@@ -463,6 +468,64 @@ console.log('\n4. 잘못된 응답 · 너무 긴 주소 · 없는 페이지');
         eq('  레이아웃 아닌 페이지: 복제본 없음', tl.clones.length, 0);
         eq('  붓 획 없음', tl.log.pen.filter((s) => s.owner === 'painter').length, 0);
         eq('  줄 목록으로 돌아온다', pageLines(tl).some((l) => l.text === '평범한 페이지'), true);
+    }
+
+    // 레이아웃 모드의 양식 — 칸 자리를 누르면 form.mjs 가 다루고, 상태는 덧그림(lt_over 복제본)으로
+    {
+        const { pageLayout } = await import('../../src/lib/pager.mjs');
+        const FURL = 'https://find.example.com/';
+        const list = {
+            width: 600, height: 400, page: '#ffffff',
+            boxes: [{ x: 20, y: 70, w: 200, h: 24, c: '#ffffff' }],
+            texts: [{ x: 20, y: 20, w: 100, h: 20, t: '찾기 페이지', s: 16, c: '#000000', b: 1 }],
+            images: [],
+            forms: [{ method: 'P', action: 'https://find.example.com/search' }],
+            fields: [
+                { form: 1, type: 't', name: 'q', value: '', label: '검색어', on: 0, min: 0, max: 0, step: 0 },
+                { form: 1, type: 'c', name: 'x', value: 'on', label: '옵션', on: 0, min: 0, max: 0, step: 0 },
+                { form: 1, type: 'o', name: 'lang', value: 'ko', label: '언어', on: 1, min: 1, max: 2, step: 0 },
+                { form: 1, type: 's', name: '', value: '', label: '찾기', on: 0, min: 0, max: 0, step: 0 },
+            ],
+            options: [{ field: 3, value: 'ko', label: '한국어', selected: 1 }, { field: 3, value: 'en', label: 'English', selected: 0 }],
+            areas: [
+                { x: 0, y: 0, w: 600, h: 400, k: 'L', n: 'https://find.example.com/home' },   // 칸이 링크 안에 있어도 칸이 이긴다
+                { x: 20, y: 70, w: 200, h: 24, k: 'F', n: 1 },
+                { x: 240, y: 74, w: 16, h: 16, k: 'F', n: 2 },
+                { x: 260, y: 74, w: 40, h: 16, k: 'G', n: 2 },
+                { x: 310, y: 70, w: 130, h: 24, k: 'F', n: 3 },
+                { x: 450, y: 70, w: 60, h: 24, k: 'G', n: 4 },
+            ],
+        };
+        const P = pageLayout(list, FURL, { title: '찾기' });
+        const pl = P.body.split('\n');
+        chk('레이아웃 양식: F · I · O 줄', pl.filter((l) => /^[FIO]/.test(l)).length === 1 + 4 + 2, pl.filter((l) => /^[FIO]/.test(l)).join(' | '));
+        chk('  검색 칸 하나뿐인 POST 는 GET 으로', pl.includes('FG\thttps://find.example.com/search'));
+        eq('  누를 자리(H) 수', pl.filter((l) => l[0] === 'H').length, 6);
+        const tf = boot();
+        visit(tf, FURL, answerWith(FURL, P.body));
+        eq('  받은 칸 · 누를 자리', `${tf.getVar('pg_ni')} ${tf.getVar('ly_nh')}`, '4 6');
+        broadcast(tf, 'sig_lay');
+        const over = () => tf.clones.filter((c) => c.of === 'lt_over' && c.shown).map((c) => c.wrote);
+        eq('  덧그림: 빈 칸은 이름표 · □ · 고른 선택지', over().join(' / '), '검색어 / □ / 한국어 ▾');
+        const H = pl.filter((l) => l[0] === 'H').map((l) => ({ x: Number(l.slice(4, 7)), y: Number(l.slice(7, 10)), w: Number(l.slice(10, 13)), h: Number(l.slice(13, 16)) }));
+        const press = (i) => {
+            tf.mouse = { x: VIEW.left + H[i].x + H[i].w / 2, y: VIEW.top - H[i].y - H[i].h / 2 };
+            const s = sigs(tf, () => tf.runMouse());
+            if (s.includes('sig_field')) sigs(tf, () => tf.runSignal('logic', 'sig_field'));
+            broadcast(tf, 'sig_lov');
+            return s;
+        };
+        chk('  체크박스 이름표를 누르면 sig_field', press(3).includes('sig_field'));
+        eq('  켜진다 → ■', over()[1], '■');
+        press(4);
+        eq('  선택 상자를 누르면 다음 선택지', over()[2], 'English ▾');
+        tf.setVar('nv_to', '');
+        setAnswer(tf, '엔트리');
+        press(1);
+        eq('  글 칸 입력 → 바로 보낸다 (글 칸 하나)', tf.getVar('nv_to'), 'https://find.example.com/search?q=엔트리&x=on&lang=en');
+        tf.setVar('nv_to', '');
+        press(0);
+        eq('  칸 밖의 링크 자리는 링크', tf.getVar('nv_to'), 'https://find.example.com/home');
     }
 
     // 렌더 모드의 CSS (data-eb) — 크기 → 스타일, 사이트 색 · 바탕 · 정렬 · 대문자, 페이지 바탕

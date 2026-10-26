@@ -1,6 +1,6 @@
 {
   "name": "entry-browser-relay",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "엔트리 작품(Entry Browser)과 실제 인터넷을 화면·클립보드로 잇는 실험용 중계 앱",
   "author": "smilepark2013",
   "license": "MIT",

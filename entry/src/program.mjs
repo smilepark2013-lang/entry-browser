@@ -49,7 +49,7 @@ const p = defineProject({
 
 const {
     V, L, get, set, inc, listAdd, listPop, listGet, listLen, listSet,
-    sendSignal, onStart, onSignal, onKey, onClick, defineFunction, call, sprite, textBox,
+    sendSignal, onStart, onSignal, onKey, onClick, onMouse, defineFunction, call, sprite, textBox,
 } = p;
 
 const until = (exitCond, body) => forever([ifDo(exitCond, [breakLoop()]), ...body]);
@@ -161,6 +161,11 @@ for (const s of Object.keys(STYLES).map(Number).filter((n) => n > 0)) {
 
 // 레이아웃 모드 — 글 크기 단계마다 원본 글상자 하나 (자신을 복제해 조각을 찍는다). 그 뒤에 화가(붓)
 // 화가는 카드·페이지 바탕보다 앞, 글 원본보다 뒤 — 그래서 상자·그림이 글 밑에 깔린다
+// 덧그림 — 양식 칸의 지금 상태(□■ · 입력한 값). 글 원본보다 앞
+const layOver = textBox('lt_over', {
+    x: VIEW.left + VIEW.w / 2, y: VIEW.top - layMod.LAY_LINE_H[layMod.OVER_K] / 2, w: VIEW.w, h: layMod.LAY_LINE_H[layMod.OVER_K], visible: false,
+    size: LAYOUT_SIZES[layMod.OVER_K], font: FONT, align: 1, color: C.text, bgColor: 'transparent', text: '',
+});
 const layText = LAYOUT_SIZES.map((size, k) => textBox(`lt${size}`, {
     x: VIEW.left + VIEW.w / 2, y: VIEW.top - layMod.LAY_LINE_H[k] / 2, w: VIEW.w, h: layMod.LAY_LINE_H[k], visible: false,
     size, font: FONT, align: 1, color: C.text, bgColor: 'transparent', text: '',
@@ -212,11 +217,11 @@ textBox('stage', { x: 0, y: 0, w: 480, h: 270, size: 9, font: FONT, color: C.sta
 // ---------------------------------------------------------------------------
 // 모듈
 // ---------------------------------------------------------------------------
-const ui = { pools, ovl, knobs, thumb, sbar, url, btn, pill, status, strip, keys, mouse, pagebg, layText, painter };
+const ui = { pools, ovl, knobs, thumb, sbar, url, btn, pill, status, strip, keys, mouse, pagebg, layText, layOver, painter };
 
 const ctx = {
     V, L, get, set, inc, listAdd, listPop, listGet, listLen, listSet,
-    until, defineFunction, call, onSignal, onKey, onClick, onStart, sendSignal, ask, answer,
+    until, defineFunction, call, onSignal, onKey, onClick, onMouse, onStart, sendSignal, ask, answer,
     status: (msg) => [set(V.ui_msg, typeof msg === 'string' ? text(msg) : msg), sendSignal('sig_status')],
     logic, ui,
     pages: { list: pageList, notFoundHead: notFound.head, notFoundTail: notFound.tail },
